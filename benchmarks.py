@@ -1,6 +1,8 @@
 import csv
 import io
 import json
+import orjson
+import rapidjson
 import pickle
 import struct
 import ujson
@@ -74,9 +76,11 @@ def protobuf_loads(raw):
 
 SERIALIZERS = (
     ('json', json.dumps, json.loads),
-    ('pickle', pickle.dumps, pickle.loads),
-    ('bson', lambda seq: b''.join(map(bson.BSON.encode, seq)), bson.decode_all),
     ('ujson', ujson.dumps, ujson.loads),
+    ('rapidjson', rapidjson.dumps, rapidjson.loads),
+    ('orjson', orjson.dumps, orjson.loads),
+    ('pickle', pickle.dumps, pickle.loads),
+    ('bson', lambda seq: b''.join(map(bson.BSON.encode, seq)), bson.decode_all),    
     ('parquet', parquet_dumps, parquet_loads),
     ('protobuf', protobuf_dumps, protobuf_loads),
     ('cbor', cbor.dumps, cbor.loads),
@@ -106,8 +110,9 @@ def main():
     for i, items in enumerate(ITEMS):
         dict_data = max_dict_data[:items]
         tuples_data = max_tuples_data[:items]
-
+        
         for dtype, data in (('dicts', dict_data), ('tuples', tuples_data)):
+            print("--")
             for name, ser_fn, deser_fn in SERIALIZERS:
                 print(f'{name} {dtype} {items}..', end=' ')
 
@@ -154,11 +159,11 @@ def main():
                 print('done')
 
     # write results as detailed json
-    with open('detailed-results.json', 'w') as fp:
+    with open('./results/detailed-results.json', 'w') as fp:
         json.dump(results, fp, indent=4)
 
     # write csv results summary
-    with open('results-summary.csv', 'w') as fp:
+    with open('./results/results-summary.csv', 'w') as fp:
         writer = csv.DictWriter(fp, extrasaction='ignore', fieldnames=(
             'name', 'dtype', 'fn', 'items', 'avg', 'avg_serde',
             'baseline-ratio', 'baseline-speedup', 'serialized_size',

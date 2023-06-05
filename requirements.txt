@@ -3,10 +3,12 @@ ipython
 cython
 pandas
 jupyterlab
-pyarrow==0.11.1  # parquet
+pyarrow==12.0.0  # parquet
 altair
-pymongo==3.7.2  # bson
+pymongo==4.3.3  # bson
 cbor==1.0.0
-msgpack==0.5.6
-protobuf==3.6.1
-ujson==1.35
+msgpack==1.0.5
+protobuf==4.23.2
+ujson==5.7.0
+orjson==3.9.0
+python-rapidjson==1.10
