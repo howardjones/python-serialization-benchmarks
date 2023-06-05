@@ -107,6 +107,9 @@ def main():
     max_tuples_data = get_tuples_data(max_dict_data)
     print('done')
 
+    total = len(ITEMS)*2*len(SERIALIZERS)
+    n = 0
+
     for i, items in enumerate(ITEMS):
         dict_data = max_dict_data[:items]
         tuples_data = max_tuples_data[:items]
@@ -114,8 +117,9 @@ def main():
         for dtype, data in (('dicts', dict_data), ('tuples', tuples_data)):
             print("--")
             for name, ser_fn, deser_fn in SERIALIZERS:
-                print(f'{name} {dtype} {items}..', end=' ')
-
+                n += 1
+                print(f'{n}/{total}: {name} {dtype} {items}..', end=' ')
+                
                 # some tests cannot be run (see SKIP_LIST for details)
                 if (dtype, name) in SKIP_LIST:
                     print('skip')
